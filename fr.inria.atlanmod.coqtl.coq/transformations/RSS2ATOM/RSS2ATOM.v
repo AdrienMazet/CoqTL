@@ -48,7 +48,7 @@ Definition RSS2ATOM :=
           (
             fun tls i m c a => maybeBuildATOMCategories a
             (
-              maybeResolveAll tls m "cat" ATOM.CategoryClass
+              maybeResolveAll tls m "categories" ATOM.CategoryClass
               (
                 maybeSingleton (Channel_getItemsObjects c m)
               )
