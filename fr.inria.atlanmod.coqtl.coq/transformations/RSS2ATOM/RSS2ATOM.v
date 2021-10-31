@@ -25,5 +25,50 @@ Instance RSS2ATOMConfiguration : ModelingTransformationConfiguration R2AConfigur
 
 Open Scope coqtl.
 
-
+Definition RSS2ATOM :=
+  transformation
+  [
+    rule "Channel2ATOM"
+    from [ChannelClass]
+    to
+    [
+      elem [ChannelClass] ATOMClass "atom"
+        (
+          fun i m c => BuildATOM
+          (Channel_getTitle c)
+          "What do I put for Index?"
+          (Channel_getDescription c)
+          (Channel_getCopyright c)
+          "What do I put for Icon?"
+          "What do I put for Logo?"
+          (Channel_getLastBuildDate c)
+        )
+        [
+          link [ChannelClass] ATOMClass ATOMCategoriesReference
+          (
+            fun tls i m c a => maybeBuildATOMCategories a
+            (
+              maybeResolveAll tls m "cat" ATOM.CategoryClass
+              (
+                maybeSingleton (Channel_getItemsObjects c m)
+              )
+            )
+          )
+        ]
+    ]
+  ].
+  (*TODO : ITEM TO ENTRY*)
+  (*TODO : CATEGORY TO CATEGORY*)
 Close Scope coqtl.
+(*
+rule "Attribute2Column"
+from [AttributeClass]
+where (fun m a => negb (getAttributeDerived a))
+to [elem [AttributeClass] ColumnClass "col"
+    (fun i m a => BuildColumn (getAttributeId a) (getAttributeName a))
+    [link [AttributeClass] ColumnClass ColumnReferenceReference
+      (fun tls i m a c =>
+        maybeBuildColumnReference c
+          (maybeResolve tls m "tab" TableClass 
+            (maybeSingleton (getAttributeTypeObject a m))))]]
+ *)
