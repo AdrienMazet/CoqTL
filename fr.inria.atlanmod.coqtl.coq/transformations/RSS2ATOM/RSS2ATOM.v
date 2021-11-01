@@ -33,42 +33,55 @@ Definition RSS2ATOM :=
     to
     [
       elem [ChannelClass] ATOMClass "atom"
+      (
+        fun i m c => BuildATOM
+        (Channel_getTitle c)
+        "What do I put for Index?"
+        (Channel_getDescription c)
+        (Channel_getCopyright c)
+        "What do I put for Icon?"
+        "What do I put for Logo?"
+        (Channel_getLastBuildDate c)
+      )
+      [
+        link [ChannelClass] ATOMClass ATOMCategoriesReference
         (
-          fun i m c => BuildATOM
-          (Channel_getTitle c)
-          "What do I put for Index?"
-          (Channel_getDescription c)
-          (Channel_getCopyright c)
-          "What do I put for Icon?"
-          "What do I put for Logo?"
-          (Channel_getLastBuildDate c)
-        )
-        [
-          link [ChannelClass] ATOMClass ATOMCategoriesReference
+          fun tls i m c a => maybeBuildATOMCategories a
           (
-            fun tls i m c a => maybeBuildATOMCategories a
+            maybeResolveAll tls m "categories" ATOM.CategoryClass
             (
-              maybeResolveAll tls m "categories" ATOM.CategoryClass
-              (
-                maybeSingleton (Channel_getItemsObjects c m)
-              )
+              maybeSingleton (Channel_getItemsObjects c m)
             )
           )
-        ]
-    ]
+        )
+      ]
+    ];
+    rule "Item2Entry"
+    from [ItemClass]
+    to
+    (
+      elem [ItemClass] EntryClass "entry"
+      (
+        fun i m item => BuildEntry
+        (Item_getTitle item)
+        (Item_getGuid item)
+        "What do I put for Rights?"
+        (Item_getComments item)
+        (Item_getPubDate item)
+        "What do I put for LastUpdate?"
+      )
+    )
+    (* rule "Category2Category"
+    from [CategoryClass]
+    to
+    (
+      elem [CategoryClass] CategoryClass "category"
+      (
+        fun i m c => BuildCategory
+        "What do I put for term?"
+        (Category_getDomain c)
+        (Category_getValue c)
+      )
+    ) *)
   ].
-  (*TODO : ITEM TO ENTRY*)
-  (*TODO : CATEGORY TO CATEGORY*)
 Close Scope coqtl.
-(*
-rule "Attribute2Column"
-from [AttributeClass]
-where (fun m a => negb (getAttributeDerived a))
-to [elem [AttributeClass] ColumnClass "col"
-    (fun i m a => BuildColumn (getAttributeId a) (getAttributeName a))
-    [link [AttributeClass] ColumnClass ColumnReferenceReference
-      (fun tls i m a c =>
-        maybeBuildColumnReference c
-          (maybeResolve tls m "tab" TableClass 
-            (maybeSingleton (getAttributeTypeObject a m))))]]
- *)
