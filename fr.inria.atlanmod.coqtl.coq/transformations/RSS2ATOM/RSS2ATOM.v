@@ -59,7 +59,7 @@ Definition RSS2ATOM :=
     rule "Item2Entry"
     from [ItemClass]
     to
-    (
+    [
       elem [ItemClass] EntryClass "entry"
       (
         fun i m item => BuildEntry
@@ -70,11 +70,12 @@ Definition RSS2ATOM :=
         (Item_getPubDate item)
         "What do I put for LastUpdate?"
       )
-    )
+      nil
+    ]
     (* rule "Category2Category"
     from [CategoryClass]
     to
-    (
+    [
       elem [CategoryClass] CategoryClass "category"
       (
         fun i m c => BuildCategory
@@ -82,6 +83,7 @@ Definition RSS2ATOM :=
         (Category_getDomain c)
         (Category_getValue c)
       )
-    ) *)
+      nil
+    ] *)
   ].
 Close Scope coqtl.
