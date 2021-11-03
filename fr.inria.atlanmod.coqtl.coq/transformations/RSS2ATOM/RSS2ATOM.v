@@ -72,18 +72,18 @@ Definition RSS2ATOM :=
       )
       nil
     ]
-    (* rule "Category2Category"
-    from [CategoryClass]
+    rule "Category2Category"
+    from [RSS.CategoryClass]
     to
     [
-      elem [CategoryClass] CategoryClass "category"
+      elem [RSS.CategoryClass] ATOM.CategoryClass "category"
       (
-        fun i m c => BuildCategory
+        fun i m c => ATOM.BuildCategory
         "What do I put for term?"
         (Category_getDomain c)
         (Category_getValue c)
       )
       nil
-    ] *)
+    ]
   ].
 Close Scope coqtl.
