@@ -71,7 +71,7 @@ Definition RSS2ATOM :=
         "What do I put for LastUpdate?"
       )
       nil
-    ]
+    ];
     rule "Category2Category"
     from [RSS.CategoryClass]
     to
