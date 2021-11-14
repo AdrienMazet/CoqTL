@@ -24,6 +24,7 @@ Instance RSS2ATOMConfiguration : ModelingTransformationConfiguration R2AConfigur
  Build_ModelingTransformationConfiguration R2AConfiguration RSSMetamodel_ModelingMetamodel_Instance ATOMMetamodel_ModelingMetamodel_Instance.
 
 Open Scope coqtl.
+Open Scope string.
 
 Definition RSS2ATOM :=
   transformation
@@ -36,12 +37,12 @@ Definition RSS2ATOM :=
       (
         fun i m c => BuildATOM
         (Channel_getTitle c)
-        "What do I put for Index?"
-        (Channel_getDescription c)
+        ""
+        (Some (Channel_getDescription c))
         (Channel_getCopyright c)
-        "What do I put for Icon?"
-        "What do I put for Logo?"
-        (Channel_getLastBuildDate c)
+        None
+        None
+        (value (Channel_getLastBuildDate c))
       )
       [
         link [ChannelClass] ATOMClass ATOMCategoriesReference
@@ -53,7 +54,36 @@ Definition RSS2ATOM :=
               maybeSingleton (Channel_getItemsObjects c m)
             )
           )
-        )
+        );
+        (* link [ChannelClass] ATOMClass ATOMLinksReference
+        (
+          fun tls i m c a => maybeBuildATOMLinks a
+          (
+            maybeResolveAll tls m "link" ATOM.Link
+            (
+              maybeSingleton (Channel_getLink c)
+            )
+          )
+        ); *)
+        (* link [ChannelClass] ATOMClass ATOMAuthorsReference
+        (
+          fun tls i m c a => maybeBuildATOMAuthors a
+          (
+            maybeResolveAll tls m "auth" ATOM.Author
+            (
+              maybeSingleton (
+                BuildATOMAuthors a (
+                  BuildAuthor (
+                    BuildPerson
+                    (Channel_getManagingEditor c) 
+                    None 
+                    (Some (Channel_getWebmaster c))
+                  )
+                )
+              )
+            )
+          )
+        ) *)
       ]
     ];
     rule "Item2Entry"
@@ -64,13 +94,14 @@ Definition RSS2ATOM :=
       (
         fun i m item => BuildEntry
         (Item_getTitle item)
-        (Item_getGuid item)
-        "What do I put for Rights?"
+        (value (Item_getGuid item))
+        (Some "???") (*TODO*)
         (Item_getComments item)
         (Item_getPubDate item)
-        "What do I put for LastUpdate?"
+        "lastUpdate ???" (*TODO*)
       )
       nil
+      (*TODO : links*)
     ];
     rule "Category2Category"
     from [RSS.CategoryClass]
@@ -79,11 +110,13 @@ Definition RSS2ATOM :=
       elem [RSS.CategoryClass] ATOM.CategoryClass "category"
       (
         fun i m c => ATOM.BuildCategory
-        "What do I put for term?"
-        (Category_getDomain c)
-        (Category_getValue c)
+        "term ???" (*TODO*)
+        (Some (Category_getDomain c))
+        (Some (Category_getValue c))
       )
       nil
     ]
   ].
+
+Close Scope string.
 Close Scope coqtl.
