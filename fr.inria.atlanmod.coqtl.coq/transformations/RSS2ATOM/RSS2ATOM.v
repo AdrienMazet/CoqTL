@@ -54,7 +54,7 @@ Definition RSS2ATOM :=
               maybeSingleton (Channel_getItemsObjects c m)
             )
           )
-        );
+        )
         (* link [ChannelClass] ATOMClass ATOMLinksReference
         (
           fun tls i m c a => maybeBuildATOMLinks a
@@ -101,7 +101,18 @@ Definition RSS2ATOM :=
         "lastUpdate ???" (*TODO*)
       )
       nil
-      (*TODO : links*)
+      (* [
+        link [ItemClass] EntryClass EntryLinksReference
+        (
+          fun tls i m item a => maybeBuildEntryLinks a
+          (
+            maybeResolveAll tls m "link" ATOM.Link
+            (
+              maybeSingleton (Item_getLink item)
+            )
+          )
+        )
+      ] *)
     ];
     rule "Category2Category"
     from [RSS.CategoryClass]
