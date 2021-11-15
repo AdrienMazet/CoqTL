@@ -36,7 +36,7 @@ core/properties/AdditivityElement.v
 core/properties/AdditivityLink.v
 core/properties/Universality.v
 core/properties/Confluence.v
-core/properties/TransformationProperties.v
+core/properties/Monotonicity.v
 #core/properties/Lifting.v
 
 core/modeling/ModelingMetamodel.v
@@ -90,3 +90,9 @@ transformations/RSS2ATOM/ATOMFlattened.v
 transformations/DBLP/DBLP.v
 transformations/IMDB/MOVIES.v
 
+core/test/iExpressions.v
+core/test/iSyntax.v
+core/test/iSemantics.v
+core/test/iSyntaxCertification.v
+#core/test/iCertification.v
+#core/test/properties/iConfluence.v
