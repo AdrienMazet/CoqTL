@@ -96,10 +96,10 @@ Definition RSS2ATOM :=
         fun i m item => BuildEntry
         (Item_getTitle item)
         (value (Item_getGuid item))
-        (Some "???") (*TODO*)
+        None
         (Item_getComments item)
         (Item_getPubDate item)
-        "lastUpdate ???" (*TODO*)
+        ""
       )
       [
         link [ItemClass] EntryClass EntryLinksReference
