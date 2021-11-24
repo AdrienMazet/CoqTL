@@ -54,24 +54,24 @@ Definition RSS2ATOM :=
               maybeSingleton (Channel_getItemsObjects c m)
             )
           )
-        )
-        (* link [ChannelClass] ATOMClass ATOMLinksReference
+        );
+        link [ChannelClass] ATOMClass ATOMLinksReference
         (
           fun tls i m c a => maybeBuildATOMLinks a
           (
-            maybeResolveAll tls m "link" ATOM.Link
+            maybeResolveAll tls m "link" ATOM.LinkClass
             (
-              maybeSingleton (Channel_getLink c)
+              None (* TODO *)
             )
           )
-        ); *)
-        (* link [ChannelClass] ATOMClass ATOMAuthorsReference
+        );
+        link [ChannelClass] ATOMClass ATOMAuthorsReference
         (
           fun tls i m c a => maybeBuildATOMAuthors a
           (
-            maybeResolveAll tls m "auth" ATOM.Author
+            maybeResolveAll tls m "auth" ATOM.AuthorClass
             (
-              maybeSingleton (
+              (* maybeSingleton (
                 BuildATOMAuthors a (
                   BuildAuthor (
                     BuildPerson
@@ -80,10 +80,11 @@ Definition RSS2ATOM :=
                     (Some (Channel_getWebmaster c))
                   )
                 )
-              )
+              ) *)
+              None (* TODO *)
             )
           )
-        ) *)
+        )
       ]
     ];
     rule "Item2Entry"
@@ -100,19 +101,18 @@ Definition RSS2ATOM :=
         (Item_getPubDate item)
         "lastUpdate ???" (*TODO*)
       )
-      nil
-      (* [
+      [
         link [ItemClass] EntryClass EntryLinksReference
         (
           fun tls i m item a => maybeBuildEntryLinks a
           (
-            maybeResolveAll tls m "link" ATOM.Link
+            maybeResolveAll tls m "link" ATOM.LinkClass
             (
-              maybeSingleton (Item_getLink item)
+              None (* TODO *)
             )
           )
         )
-      ] *)
+      ]
     ];
     rule "Category2Category"
     from [RSS.CategoryClass]
