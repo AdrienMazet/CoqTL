@@ -59,10 +59,7 @@ Definition RSS2ATOM :=
         (
           fun tls i m c a => maybeBuildATOMLinks a
           (
-            maybeResolveAll tls m "link" ATOM.LinkClass
-            (
-              None (* TODO *)
-            )
+            Some [BuildLink None (Channel_getLink c) None None None None]
           )
         );
         link [ChannelClass] ATOMClass ATOMAuthorsReference

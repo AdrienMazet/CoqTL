@@ -81,18 +81,30 @@ Definition ATOM2RSS :=
         (Entry_getId entry)
       )
       [
-        link [EntryClass] ItemClass (*to change ->*)EntryLinksReference
+        link [EntryClass] ItemClass ChannelItemsReference
         (
-          fun tls i m a item => (*to change ->*)maybeBuildEntryLinks item
+          fun tls i m a item => maybeBuildChannelItems item
           (
-            (*change the following function*)
-            maybeResolveAll tls m "link" ATOM.LinkClass
+            maybeResolveAll tls m "entry" RSS.ItemClass
             (
-              None (* TODO *)
+              None (*to change*)
             )
           )
         )
       ]
+    ];
+    rule "Category2Category"
+    from [ATOM.CategoryClass]
+    to
+    [
+      elem [ATOM.CategoryClass] RSS.CategoryClass "category"
+      (
+        fun i m c => RSS.BuildCategory
+        "term" (*to change*)
+        (Some (Category_getDomain c))
+        (Some (Category_getValue c))
+      )
+      nil
     ]
   ].
 
