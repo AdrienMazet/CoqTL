@@ -24,8 +24,6 @@ Instance RSS2ATOMConfiguration : ModelingTransformationConfiguration R2AConfigur
  Build_ModelingTransformationConfiguration R2AConfiguration RSSMetamodel_ModelingMetamodel_Instance ATOMMetamodel_ModelingMetamodel_Instance.
 
 Open Scope coqtl.
-Open Scope string.
-
 Definition RSS2ATOM :=
   transformation
   [
@@ -51,7 +49,11 @@ Definition RSS2ATOM :=
           (
             maybeResolveAll tls m "categories" ATOM.CategoryClass
             (
-              maybeSingleton (Channel_getItemsObjects c m)
+              maybeSingleton (
+                maybeSingleton (
+                  Channel_getCategoryObject c m
+                )
+              )
             )
           )
         );
@@ -59,30 +61,17 @@ Definition RSS2ATOM :=
         (
           fun tls i m c a => maybeBuildATOMLinks a
           (
-            maybeResolveAll tls m "link" ATOM.LinkClass
-            (
-              None (* TODO *)
-            )
+            Some [
+              BuildLink None (Channel_getLink c) None None None None
+            ]
           )
         );
         link [ChannelClass] ATOMClass ATOMAuthorsReference
         (
           fun tls i m c a => maybeBuildATOMAuthors a
           (
-            maybeResolveAll tls m "auth" ATOM.AuthorClass
-            (
-              (* maybeSingleton (
-                BuildATOMAuthors a (
-                  BuildAuthor (
-                    BuildPerson
-                    (Channel_getManagingEditor c) 
-                    None 
-                    (Some (Channel_getWebmaster c))
-                  )
-                )
-              ) *)
-              None (* TODO *)
-            )
+            None
+            (* TODO *)
           )
         )
       ]
@@ -104,12 +93,11 @@ Definition RSS2ATOM :=
       [
         link [ItemClass] EntryClass EntryLinksReference
         (
-          fun tls i m item a => maybeBuildEntryLinks a
+          fun tls i m item e => maybeBuildEntryLinks e
           (
-            maybeResolveAll tls m "link" ATOM.LinkClass
-            (
-              None (* TODO *)
-            )
+            Some [
+              BuildLink None (Some (Item_getLink item)) None None None None
+            ]
           )
         )
       ]
@@ -121,7 +109,7 @@ Definition RSS2ATOM :=
       elem [RSS.CategoryClass] ATOM.CategoryClass "category"
       (
         fun i m c => ATOM.BuildCategory
-        "term ???" (*TODO*)
+        ""
         (Some (Category_getDomain c))
         (Some (Category_getValue c))
       )
@@ -129,5 +117,4 @@ Definition RSS2ATOM :=
     ]
   ].
 
-Close Scope string.
 Close Scope coqtl.
